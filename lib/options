@@ -1,0 +1,11 @@
+[ \( ! -f /etc/vimrc.ori \) -a \( -f /etc/vimrc \) ] && \
+	cp /etc/vimrc /etc/vimrc.ori
+[ \( ! -f /etc/my.cnf.ori \) -a \( -f /etc/my.cnf \) ] && \
+	cp /etc/my.cnf /etc/my.cnf.ori
+
+echo "
+alias l='ls -lt'
+alias p='less -r'
+alias vi='/usr/bin/vim'
+alias view='/usr/bin/vim -R'
+" >>~/.bashrc
