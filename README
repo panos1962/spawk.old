@@ -1,6 +1,5 @@
 [S]QL [P]owered AWK (SPAWK)
 ===========================
-
 Source Files
 ------------
 The source file `spawk.c' contains an extension library having to do
