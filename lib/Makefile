@@ -29,12 +29,12 @@ install: $(LIB) $(LIB_r)
 
 test:
 	@make
-	@-LIBRARY_PATH=".:/usr/lib" gawk -f Test/test99.awk 2>error
+	@-LD_LIBRARY_PATH=".:/usr/lib" gawk -f Test/test99.awk 2>error
 	@[ -s error ] && cat error >&2; rm -f error
 
 cleanup:
-	@rm -f backup spawk.[co] spawk.lst spawk.txt \
-		$(LIB) $(LIB_r) /usr/lib/$(LIB) /usr/lib/$(LIB_r)
+	@rm -f backup spawk.* $(LIB) $(LIB_r) \
+		/usr/lib/$(LIB) /usr/lib/$(LIB_r)
 
 fresh:
 	@make cleanup
