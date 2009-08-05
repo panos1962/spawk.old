@@ -1,3 +1,0 @@
-hg commit -A -u panos1962 -m 'TEST!' &&
-hg push https://panos1962:Pn3rs9nJ3ZZ8@spawk.googlecode.com/hg/spawk
-
