@@ -1,5 +1,5 @@
-AWK_INCLUDE = /root/SPAWK/gawk
-SQL_INCLUDE = /usr/include/mysql
+AWK_INCLUDE = __awk_include__
+SQL_INCLUDE = __sql_include__
 LIB = libspawk.so
 LIB_r = libspawk_r.so
 OBJ = spawk.o
@@ -11,10 +11,10 @@ BU_LIST = README Makefile tools/*.sh src.stable/*.c src/*.c \
 all: $(LIB) $(LIB_r)
 
 $(LIB): $(OBJ)
-	@sh tools/makelib.sh $(LIB) /usr/lib/mysql/libmysqlclient.so
+	@sh tools/makelib.sh $(LIB) __sql_library__
 
 $(LIB_r): $(OBJ)
-	@sh tools/makelib.sh $(LIB_r) /usr/lib/mysql/libmysqlclient_r.so
+	@sh tools/makelib.sh $(LIB_r) __sql_r_library__
 
 $(OBJ): spawk.c
 	@sh tools/checkincl.sh $(AWK_INCLUDE) awk.h
