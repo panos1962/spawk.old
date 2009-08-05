@@ -7,7 +7,6 @@ BEGIN {
 	# `~/.my.cnf'). We can, of course, set values externally.
 	# The "database" indexed element is the default database
 	# to be used with new database connections.
-	#
 	# We can, alternatively, use `/etc/spawkrc' and `~/.spawkrc'
 	# files to run SQL commnands to initialize new servers.
 	SPAWKINFO["database"] = "forex"
