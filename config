@@ -1,0 +1,79 @@
+#!/bin/sh
+
+progname="spawk@config"
+errs=
+
+while getopts ":" arg
+do
+	case "${arg}" in
+	\?)
+		echo "${progname}: ${OPTARG}: illegal option" >&2
+		errs=yes
+		;;
+	esac
+	echo ${arg}
+done
+shift $(expr "${OPTIND}" - 1)
+[ $# -ne 0 ] && errs=yes
+if [ -n "${errs}" ]; then
+	echo "usage: ${progname}" >&2
+	exit 1
+fi
+
+if [ -w /dev/tty ]; then
+	exec 3>/dev/tty
+else
+	exec 3>/dev/null
+fi
+
+echo -n "Locating \`mysql.h'..." >&3
+sql_include=$(find / -name mysql.h -print | head -n1)
+if [ -z "${sql_include}" ]; then
+	echo >&3
+	echo "${progname}: mysql.h: not found" >&2
+	errs=yes
+else
+	sql_include=$(dirname "${sql_include}")
+	echo -e "\r\`mysql.h' located at \`${sql_include}'" >&3
+fi
+
+echo -n "Locating \`awk.h'..." >&3
+awk_include=$(find / -name awk.h -print | head -n1)
+if [ -z "${awk_include}" ]; then
+	echo >&3
+	echo "${progname}: awk.h: not found" >&2
+	errs=yes
+else
+	awk_include=$(dirname "${awk_include}")
+	echo -e "\r\`awk.h' located at \`${awk_include}'" >&3
+fi
+
+echo -n "Locating \`libmysqlclient.so'..." >&3
+sql_library=$(find / -name libmysqlclient.so -print | head -n1)
+if [ -z "${sql_library}" ]; then
+	echo >&3
+	echo "${progname}: libmysqlclient.so: not found" >&2
+	errs=yes
+else
+	echo -e "\rfound \`${sql_library}'" >&3
+fi
+
+echo -n "Locating \`libmysqlclient_r.so'..." >&3
+sql_r_library=$(find / -name libmysqlclient_r.so -print | head -n1)
+if [ -z "${sql_r_library}" ]; then
+	echo >&3
+	echo "${progname}: libmysqlclient_r.so: not found" >&2
+	errs=yes
+else
+	echo -e "\rfound \`${sql_r_library}'" >&3
+fi
+
+if [ -n "${errs}" ]; then
+	echo "${progname}: errors encountered (program aborted)" >&2
+	exit 2
+fi
+
+sed "s;__awk_include__;${awk_include};g
+s;__sql_include__;${sql_include};g
+s;__sql_library__;${sql_library};g
+s;__sql_r_library__;${sql_r_library};g" lib/Makefile >Makefile

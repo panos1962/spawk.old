@@ -3,7 +3,7 @@ SQL_INCLUDE = __sql_include__
 LIB = libspawk.so
 LIB_r = libspawk_r.so
 OBJ = spawk.o
-BU_LIST = README Makefile tools/*.sh src.stable/*.c src/*.c \
+BU_LIST = README config tools/*.sh src.stable/*.c src/*.c \
 	lib/* bin/* Test/* Sample/*
 
 .SUFFIXES:
@@ -29,25 +29,23 @@ install: $(LIB) $(LIB_r)
 
 test:
 	@make
-	@-gawk -f Test/test99.awk 2>error
+	@-LIBRARY_PATH=".:/usr/lib" gawk -f Test/test99.awk 2>error
 	@[ -s error ] && cat error >&2; rm -f error
 
 cleanup:
-	@rm -f spawk.[co] spawk.lst spawk.txt $(LIB) $(LIB_r) \
-		BACKUP SPAWK TEST
+	@rm -f backup spawk.[co] spawk.lst spawk.txt \
+		$(LIB) $(LIB_r) /usr/lib/$(LIB) /usr/lib/$(LIB_r)
 
 fresh:
 	@make cleanup
 	@make
 
-BACKUP: SPAWK TEST
-	@make install
+backup: spawk.tar
 	@sh tools/backup.sh
 
-SPAWK: $(BU_LIST)
+spawk.tar: $(BU_LIST)
 	@make all
 	@tar -czvf spawk.tar $(BU_LIST) >spawk.lst
-	tar -cf SPAWK lib/install spawk.tar
 
 spawk.c: src.stable/*.c src/*.c
 	@sh tools/makesrc.sh >spawk.c
@@ -56,6 +54,3 @@ spawk.c: src.stable/*.c src/*.c
 man:
 	@groff -T ascii -man -rLL=6.5i -rLT=7.7i \
 		lib/spawk.man | less -is
-
-TEST: Test/*
-	@(cd Test && tar -czvf ../TEST * >/dev/null)
