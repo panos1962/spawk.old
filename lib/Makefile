@@ -43,6 +43,9 @@ fresh:
 backup: spawk.tar
 	@sh tools/backup.sh
 
+commit: spawk.tar
+	@sh tools/commit.sh
+
 spawk.tar: $(BU_LIST)
 	@make all
 	@tar -czvf spawk.tar $(BU_LIST) >spawk.lst
