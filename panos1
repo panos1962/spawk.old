@@ -1,14 +1,1 @@
-total 52
-drwxr-xr-x 10 panos panos 4096 2009-08-06 15:30 .
-drwxr-xr-x 25 panos panos 4096 2009-08-05 19:12 ..
-drwxr-xr-x  2 panos panos 4096 2009-08-06 15:25 bin
--rw-r--r--  1 panos panos 1808 2009-08-06 09:30 config
-drwxr-xr-x  3 panos panos 4096 2009-08-06 15:29 .hg
-drwxr-xr-x  2 panos panos 4096 2009-08-06 15:25 lib
--rw-r--r--  1 panos panos    0 2009-08-06 15:30 panos1
--rw-r--r--  1 panos panos 6516 2009-08-05 19:09 README
-drwxr-xr-x  2 panos panos 4096 2009-08-06 15:25 Sample
-drwxr-xr-x  2 panos panos 4096 2009-08-06 15:25 src
-drwxr-xr-x  2 panos panos 4096 2009-08-06 15:25 src.stable
-drwxr-xr-x  2 panos panos 4096 2009-08-06 15:25 Test
-drwxr-xr-x  2 panos panos 4096 2009-08-06 15:25 tools
+drwxr-xr-x 10 panos panos 4096 2009-08-06 15:31 .
