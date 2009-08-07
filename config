@@ -50,6 +50,8 @@ fi
 
 echo -n "Locating \`libmysqlclient.so'..." >&3
 sql_library=$(find / -name libmysqlclient.so -print -quit 2>/dev/null)
+[ -z "${sql_library}" ] && sql_library=$(find / -name \
+libmysqlclient.so.* -print -quit 2>/dev/null)
 if [ -z "${sql_library}" ]; then
 	echo >&3
 	echo "${progname}: libmysqlclient.so: not found" >&2
@@ -61,6 +63,8 @@ fi
 echo -n "Locating \`libmysqlclient_r.so'..." >&3
 sql_r_library=$(find / -name libmysqlclient_r.so -print \
 -quit 2>/dev/null)
+[ -z "${sql_r_library}" ] && sql_r_library=$(find / -name \
+libmysqlclient_r.so.* -print -quit 2>/dev/null)
 if [ -z "${sql_r_library}" ]; then
 	echo >&3
 	echo "${progname}: libmysqlclient_r.so: not found" >&2
