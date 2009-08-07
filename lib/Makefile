@@ -24,10 +24,13 @@ $(OBJ): spawk.c
 		-D_SPAWK_DEBUG -DHAVE_CONFIG_H spawk.c
 	@strip --strip-unneeded $(OBJ)
 
-install: $(LIB) $(LIB_r)
-	@cp $(LIB) $(LIB_r) /usr/lib/
-	@sh tools/makelib.sh $(LIB)
-	@sh tools/makelib.sh $(LIB_r)
+install: /usr/lib/$(LIB) /usr/lib/$(LIB_r)
+
+/usr/lib/$(LIB): $(OBJ)
+	@sh tools/makelib.sh /usr/lib/$(LIB) __sql_library__
+
+/usr/lib/$(LIB_r): $(OBJ)
+	@sh tools/makelib.sh /usr/lib/$(LIB_r) __sql_r_library__
 
 test:
 	@make
