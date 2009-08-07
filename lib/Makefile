@@ -3,7 +3,7 @@ SQL_INCLUDE = __sql_include__
 LIB = libspawk.so
 LIB_r = libspawk_r.so
 OBJ = spawk.o
-BU_LIST = README config tools/*.sh src.stable/*.c src/*.c \
+BU_LIST = README configure tools/*.sh src.stable/*.c src/*.c \
 	lib/* bin/* Test/* Sample/*
 
 .SUFFIXES:
@@ -26,6 +26,8 @@ $(OBJ): spawk.c
 
 install: $(LIB) $(LIB_r)
 	@cp $(LIB) $(LIB_r) /usr/lib/
+	@sh tools/makelib.sh $(LIB)
+	@sh tools/makelib.sh $(LIB_r)
 
 test:
 	@make
