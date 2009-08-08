@@ -27,50 +27,52 @@ else
 fi
 
 echo -n "Locating \`mysql.h'..." >&3
-sql_include=$(find / -name mysql.h -print -quit 2>/dev/null)
-if [ -z "${sql_include}" ]; then
+sqlincl=$(find / -name mysql.h -print -quit 2>/dev/null)
+if [ -z "${sqlincl}" ]; then
 	echo >&3
 	echo "${progname}: mysql.h: not found" >&2
 	errs=yes
 else
-	sql_include=$(dirname "${sql_include}")
-	echo -e "\r\`mysql.h' located at \`${sql_include}'" >&3
+	sqlincl=$(dirname "${sqlincl}")
+	echo -e "\r\`mysql.h' located at \`${sqlincl}'" >&3
 fi
 
 echo -n "Locating \`awk.h'..." >&3
-awk_include=$(find / -name awk.h -print -quit 2>/dev/null)
-if [ -z "${awk_include}" ]; then
+awkincl=$(find / -name awk.h -print -quit 2>/dev/null)
+if [ -z "${awkincl}" ]; then
 	echo >&3
 	echo "${progname}: awk.h: not found" >&2
 	errs=yes
 else
-	awk_include=$(dirname "${awk_include}")
-	echo -e "\r\`awk.h' located at \`${awk_include}'" >&3
+	awkincl=$(dirname "${awkincl}")
+	echo -e "\r\`awk.h' located at \`${awkincl}'" >&3
 fi
 
 echo -n "Locating \`libmysqlclient.so'..." >&3
-sql_library=$(find / -name libmysqlclient.so -print -quit 2>/dev/null)
-[ -z "${sql_library}" ] && sql_library=$(find / -name \
+sqllib=$(find / -name libmysqlclient.so -print -quit 2>/dev/null)
+[ -z "${sqllib}" ] && sqllib=$(find / -name \
 libmysqlclient.so.* -print -quit 2>/dev/null)
-if [ -z "${sql_library}" ]; then
+if [ -z "${sqllib}" ]; then
 	echo >&3
 	echo "${progname}: libmysqlclient.so: not found" >&2
 	errs=yes
 else
-	echo -e "\rfound \`${sql_library}'" >&3
+	echo -e "\rfound \`${sqllib}'" >&3
+	lib=libspawk.so
 fi
 
 echo -n "Locating \`libmysqlclient_r.so'..." >&3
-sql_r_library=$(find / -name libmysqlclient_r.so -print \
+sqllib_r=$(find / -name libmysqlclient_r.so -print \
 -quit 2>/dev/null)
-[ -z "${sql_r_library}" ] && sql_r_library=$(find / -name \
+[ -z "${sqllib_r}" ] && sqllib_r=$(find / -name \
 libmysqlclient_r.so.* -print -quit 2>/dev/null)
-if [ -z "${sql_r_library}" ]; then
+if [ -z "${sqllib_r}" ]; then
 	echo >&3
 	echo "${progname}: libmysqlclient_r.so: not found" >&2
 	errs=yes
 else
-	echo -e "\rfound \`${sql_r_library}'" >&3
+	echo -e "\rfound \`${sqllib_r}'" >&3
+	lib_r=libspawk_r.so
 fi
 
 if [ -n "${errs}" ]; then
@@ -78,7 +80,7 @@ if [ -n "${errs}" ]; then
 	exit 2
 fi
 
-sed "s;__awk_include__;${awk_include};g
-s;__sql_include__;${sql_include};g
-s;__sql_library__;${sql_library};g
-s;__sql_r_library__;${sql_r_library};g" lib/Makefile >Makefile
+awk -v lib="${lib}" -v lib_r="${lib_r}" \
+	-v sqllib="${sqllib}" -v sqllib_r="${sqllib_r}" \
+	-v awkincl="${awkincl}" -v sqlincl="${sqlincl}" \
+	-v prefix="/usr/lib" -f lib/makemake.awk >Makefile
