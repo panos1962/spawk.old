@@ -70,14 +70,15 @@ BEGIN {
 	if (lib) {
 		print ""
 		print "$(PREFIX)$(LIB): $(OBJ)"
-		print "\t@sh tools/makelib.sh $(PREFIX)$(LIB)", sqllib
+		print "\t@mv $(LIB) $(PREFIX)$(LIB)"
+		print "\t@sh tools/makelib.sh $(PREFIX)$(LIB)"
 	}
 
 	if (lib_r) {
 		print ""
 		print "$(PREFIX)$(LIB_r): $(OBJ)"
-		print "\t@sh tools/makelib.sh $(PREFIX)$(LIB_r)", \
-			sqllib_r
+		print "\t@mv $(LIB_r) $(PREFIX)$(LIB_r)"
+		print "\t@sh tools/makelib.sh $(PREFIX)$(LIB_r)"
 	}
 
 	print ""
