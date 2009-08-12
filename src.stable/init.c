@@ -59,7 +59,7 @@ init(void)
 	fprintf(stderr, "%sINITIATING SPAWK LIBRARY\n", debug_string);
 	fflush(stderr);
 #endif
-	set_progname();
+	set_progname(0);
 	MY_INIT(myname);
 	atexit(cleanup);
 	if (mysql_library_init(0, NULL, NULL))

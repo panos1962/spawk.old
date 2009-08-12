@@ -30,7 +30,7 @@ echo -n "Locating \`mysql.h'..." >&3
 sqlincl=$(find / -name mysql.h -print -quit 2>/dev/null)
 if [ -z "${sqlincl}" ]; then
 	echo >&3
-	echo "${progname}: mysql.h: not found" >&2
+	echo "${progname}: mysql.h: file not found" >&2
 	errs=yes
 else
 	sqlincl=$(dirname "${sqlincl}")
@@ -41,7 +41,7 @@ echo -n "Locating \`awk.h'..." >&3
 awkincl=$(find / -name awk.h -print -quit 2>/dev/null)
 if [ -z "${awkincl}" ]; then
 	echo >&3
-	echo "${progname}: awk.h: not found" >&2
+	echo "${progname}: awk.h: file not found" >&2
 	errs=yes
 else
 	awkincl=$(dirname "${awkincl}")
@@ -54,7 +54,7 @@ sqllib=$(find / -name libmysqlclient.so -print -quit 2>/dev/null)
 libmysqlclient.so.* -print -quit 2>/dev/null)
 if [ -z "${sqllib}" ]; then
 	echo >&3
-	echo "${progname}: libmysqlclient.so: not found" >&2
+	echo "${progname}: libmysqlclient.so: library not found" >&2
 	errs=yes
 else
 	echo -e "\rfound \`${sqllib}'" >&3
@@ -68,7 +68,7 @@ sqllib_r=$(find / -name libmysqlclient_r.so -print \
 libmysqlclient_r.so.* -print -quit 2>/dev/null)
 if [ -z "${sqllib_r}" ]; then
 	echo >&3
-	echo "${progname}: libmysqlclient_r.so: not found" >&2
+	echo "${progname}: libmysqlclient_r.so: library not found" >&2
 	errs=yes
 else
 	echo -e "\rfound \`${sqllib_r}'" >&3

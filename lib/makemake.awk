@@ -2,9 +2,18 @@ BEGIN {
 	if (!(lib || lib_r)) {
 		print "Not normal, neither threads-safe " \
 			"mode" >"/dev/stderr"
-		exit 1
+		errs++
 	}
 
+	vfile = "lib/version"
+	if ((getline version <vfile) <= 0) {
+		print vfile ": " ERRNO >"/dev/stderr"
+		errs++
+	}
+	if (errs)
+		exit(1)
+
+	close(vfile)
 	OFS = " "
 	print "AWK_INCLUDE =", awkincl
 	print "SQL_INCLUDE =", sqlincl
@@ -55,7 +64,8 @@ BEGIN {
 	print "\t@echo \"Compiling \\`spawk.c'...\""
 	print "\t@gcc -shared -g -c -O -I$(AWK_INCLUDE) " \
 		"-I$(SQL_INCLUDE) -D_SPAWK_DEBUG " \
-		"-DHAVE_CONFIG_H spawk.c"
+		"-DHAVE_CONFIG_H -DSPAWK_VERSION=\"\\\"" \
+		version "\\\"\" spawk.c"
 	print "\t@strip --strip-unneeded $(OBJ)"
 
 	print ""
@@ -89,7 +99,7 @@ BEGIN {
 
 	print ""
 	print "cleanup:"
-	printf "\t@rm -f backup spawk.*"
+	printf "\t@rm -f backup spawk.* spawk*.tar"
 	if (lib)
 		printf " $(LIB)"
 
@@ -109,17 +119,17 @@ BEGIN {
 
 	print ""
 	print ""
-	print "backup: spawk.tar"
-	print "\t@sh tools/backup.sh"
+	print "backup: spawk" version ".tar"
+	print "\t@sh tools/backup.sh " version
 
 	print ""
-	print "commit: spawk.tar"
-	print "\t@sh tools/commit.sh"
+	print "commit: spawk" version ".tar"
+	print "\t@sh tools/commit.sh " version
 
 	print ""
-	print "spawk.tar: $(BU_LIST)"
+	print "spawk" version ".tar: $(BU_LIST)"
 	print "\t@make all"
-	print "\t@tar -czvf spawk.tar $(BU_LIST) >spawk.lst"
+	print "\t@tar -czvf spawk" version ".tar $(BU_LIST) >spawk.lst"
 
 	print ""
 	print "spawk.c: src.stable/*.c src/*.c"

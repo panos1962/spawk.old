@@ -35,7 +35,7 @@ void *dl;
 
 	// Check `SPAWKINFO' for "program" indexed element and
 	// if exists, then use it as the program's name.
-	set_progname();
+	set_progname(1);
 	make_builtin("spawk_debug", do_spawk_debug, 2);
 	make_builtin("spawk_program", do_spawk_program, 1);
 	make_builtin("spawk_query", do_spawk_query, 1);

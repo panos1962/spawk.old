@@ -32,7 +32,7 @@ do_spawk_program(NODE *tree)
 	// Check `SPAWKINFO' for "program" indexed element. If
 	// found, then assume that element's value as the program's
 	// name until now.
-	set_progname();
+	set_progname(0);
 
 	// The function will return the current program name.
 	set_value(tmp_string((char *)myname, strlen(myname)));

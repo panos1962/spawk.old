@@ -28,7 +28,7 @@ if [ $# -eq 2 ]; then
 	[ -n "${errs}" ] && exit 2
 
 	echo "Linking \`${1}'
-		with \`${2}' library..."
+	with \`${2}' library..."
 	ld --strip-all -o "${1}" -shared spawk.o "${2}" || {
 		echo "${0}: ${1}: link failed" >&2
 		exit 1
