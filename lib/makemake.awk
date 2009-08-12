@@ -37,7 +37,7 @@ BEGIN {
 	print ".SUFFIXES:"
 	print ""
 
-	printf "all:"
+	printf "all: Makefile"
 	if (lib)
 		printf " $(LIB)"
 
@@ -45,6 +45,11 @@ BEGIN {
 		printf " $(LIB_r)"
 
 	print ""
+	print ""
+	print "Makefile: lib/version"
+        print "\t@echo \"Run \\`sh configure' to refresh \\`Makefile'\""
+	print "\t@exit 1"
+
 	if (lib) {
 		print ""
 		print "$(LIB): $(OBJ)"
