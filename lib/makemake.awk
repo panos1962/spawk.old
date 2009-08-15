@@ -30,8 +30,8 @@ BEGIN {
 		print "LIB_r =", lib_r
 
 	print "OBJ = spawk.o"
-	print "BU_LIST = README configure tools/*.sh src.stable/*.c " \
-		"src/*.c lib/* bin/* Test/* Sample/*"
+	print "BU_LIST = README INSTALL configure tools/*.sh " \
+		"src.stable/*.c src/*.c lib/* bin/* Test/* Sample/*"
 
 	print ""
 	print ".SUFFIXES:"
