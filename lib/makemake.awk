@@ -139,7 +139,7 @@ BEGIN {
 	print ""
 	print "spawk" version ".tar: $(BU_LIST)"
 	print "\t@make all"
-	print "\t@tar -cvf spawk" version ".tar $(BU_LIST) >/dev/null"
+	print "\t@tar -cf spawk" version ".tar $(BU_LIST) >/dev/null"
 	print "\t@rm -rf spawk" version "; mkdir spawk" version
 	print "\t@(cd spawk" version "; tar xf ../spawk" version ".tar)"
 	print "\t@tar -czvf spawk" version ".tar spawk" \
