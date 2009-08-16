@@ -1,0 +1,272 @@
+.TH spawk 1 "Jul 20 2009" "Panos I. Papadopoulos" "Utility Commands"
+.
+.nh
+.SH NAME
+spawk \- awk front-end
+.
+.SH SYNOPSIS
+.B spawk \fR[\fBOPTIONS\fR...] [\fBFILES\fR...]
+.
+.SH DESCRIPTION
+.I Spawk
+is an awk front-end program. You can use
+.I spawk
+to simplify awk command line.
+Awk programs may be specified using the
+.B \-f
+option, while awk one\-liners may be specified using
+.B \-s
+option;
+.B -f
+option is just like
+.I awk
+.B -f
+option, whereas
+.B -s
+option is just like
+.I awk
+.B --source
+option.
+Multiple programs or one\-liners are allowed to construct the final
+awk script to run.
+.
+.PP
+You can define variables on the command line using
+.B \-v
+or
+.B \-n
+options.
+All variables' assignments will take place at the
+.B BEGIN
+section of the final awk script.
+.
+After
+.B \-\-
+you can also supply various options to the final awk process.
+.
+.SS SELF-CONTAINED PROGRAMS
+One of the most interesting features of
+.I spawk
+is the so called self\-contained awk programs.
+If a collection of awk functions are to be used from many awk
+programs, then it's a good thing to group those functions together in
+awk "library" files and then run \fIspawk\fR with the correct options
+to "include" the needed libraries. Let's say we have a group of awk
+general mathematical functions in \fI/usr/lib/mymath.awk\fR file
+and we want to run \fItest1\fR awk script which makes use of
+some of those functions. We can simply run:
+.
+.PP
+.nf
+.in +4
+spawk \fB\-f\fR \fI/usr/lib/mymath.awk\fR \fB\-f\fR \fItest1\fR
+.fi
+.
+.PP
+If we need functions from another awk library file also, let's say
+\fI/lib/econ.awk\fR:
+.fi
+.
+.PP
+.nf
+.in +4
+spawk \fB\-f\fR \fI/usr/lib/mymath.awk\fR \
+\fB\-f\fR \fI/lib/econ.awk\fR \fB\-f\fR \fItest1\fR
+.fi
+.
+.PP
+will suffice. This is a very useful feature of \fIspawk\fR
+and it's more simplified with the use
+.B AWKPATH
+environment variable. This variable plays for
+.I awk
+the same role
+.B PATH
+variable plays for the shell. Setting
+.B AWKPATH
+to something like:
+.
+.PP
+.nf
+.in +4
+export \fBAWKPATH\fR="\fI/lib\fR:\fI/usr/lib\fR"
+.fi
+.
+.PP
+will simplify the above command:
+.
+.PP
+.nf
+.in +4
+spawk -f math.awk -f econ.awk -f test1
+.fi
+.PP
+The truth is that
+.B AWKPATH
+is better to be used for awk scripts rather awk libraries.
+That is the role of self\-contained
+programs. But what exactly are self\-contained programs?
+Spawk uses
+.B #@
+directive to denote libraries to be "included" in the final awk script.
+In the example above we could alternatively include the files
+.I math.awk
+and
+.I econ.awk
+using self\-contained libraries' directives just by begin the
+.I test1
+script as follows:
+.
+.PP
+.nf
+.in +4
+\fB#@\fR \fI/usr/lib/math.awk\fR
+\fB#@\fR \fI/lib/econ.awk\fR
+\&...
+.fi
+.
+.PP
+In order to simplify things further we can set the
+.B SPAWK_LIBRARY_PATH
+environment variable just as we set the
+.B LIBRARY_PATH
+for shell libraries:
+.
+.PP
+.nf
+.in +4
+export \fBSPAWK_LIBRARY_PATH\fR="\fI/lib\fR:\fI/usr/lib\fR"
+.fi
+.
+.PP
+Now just run:
+.
+.PP
+.nf
+.in +4
+spawk -f test1
+.fi
+.
+.PP
+where
+.I test1
+begins as follows:
+.
+.PP
+.nf
+.in +4
+\fB#@\fR \fImath.awk\fR
+\fB#@\fR \fIecon.awk\fR
+\&...
+.fi
+.
+.PP
+To clear things up, the
+.B SPAWK_PATH
+environment variable is used to locate files specified with the
+.B \-f
+options, whereas
+.B SPAWK_LIBRARY_PATH
+environment variable is used to locate self\-contained libraries,
+that is libraries included in the scripts via
+.B #@
+directives.
+.
+.SH OPTIONS
+.PP
+.I Spawk
+accepts the following options, listed by frequency.
+.
+.TP
+[\ \fB\-f\fP\ \fIfile\fP\ ]
+Add
+.I file
+to the final script to run with awk.
+.I File
+may not lie in the current directory but rather be located using
+.B SPAWK_PATH
+environment variable.
+.
+.TP
+[\ \fB\-s\fP\ \fIscript\fP\ ]
+Add one\-line
+.I script
+to the final script to run with awk.
+.
+.TP
+\fB\-v\fI var\fB\^=\^\fIval\fR
+Set variable \fIvar\fP to string value \fIval\fP.
+.
+.TP
+\fB\-n\fI var\fB\^=\^\fIval\fR
+Set variable \fIvar\fP to number value \fIval\fP.
+.
+.TP
+\fB\-l\fR \fIlibrary\fR
+Loads
+.I library
+extension library at the
+.B BEGIN
+section of the final awk script.
+The libraries may be specified as absolute pathnames,
+or may be located using the
+.B LIBRARY_PATH
+environment variable.
+.I
+.
+.TP
+.B \-S
+Loads the
+.I SPAWK
+extension library at the
+.B BEGIN
+section of the final awk script. You can achieve the same
+result using
+.B \-l
+with
+.I libspawk
+argument.
+.
+.TP
+.B \-c
+Prints the final awk script to the standard output
+just before indirect library inclusion and exit.
+.
+.TP
+.B \-C
+Prints the final awk script to the standard output
+after indirect library inclusion and exit.
+.
+.SH ENVIRONMENT VARIABLES
+The
+.B AWKPATH
+environment variable can be used to provide a list of directories that
+.I spawk
+searches when looking for files named via the
+.B \-f
+option, just like awk does.
+.PP
+The
+.B SPAWK_LIBRARY_PATH
+environment variable can be used to provide a list of directories that
+.I spawk
+searches when looking for files named via the
+.B #@
+directives.
+.SH FILES
+.I Spawk
+makes use of temporary files. Those files will be located at
+.I /usr/tmp
+or
+.I /tmp
+directories by default. We can change that fact by the use of
+.B TMPDIR
+environment variable.
+.SH SEE ALSO
+.IR awk (1)
+.SH AUTHORS
+.I Spawk
+was designed and implemented by Panos I. Papadopoulos.
+.SH COPYING PERMISSIONS
+Copyright \(co 2009,
+Panos I. Papadopoulos

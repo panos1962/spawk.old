@@ -1,0 +1,2 @@
+USE spawk;
+SET @max_tax = 100000;

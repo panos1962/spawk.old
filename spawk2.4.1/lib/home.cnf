@@ -1,0 +1,7 @@
+[spawk]
+database = "payroll"
+OFS = "|"
+
+[payroll]
+password_prompt = "ENTER PAYROLL PASSWORD: "
+database = "payroll"
