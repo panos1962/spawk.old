@@ -1,4 +1,13 @@
 
+Installation Procedure Update                         Aug 16, 2009, 22:42
+=============================
+
+Begining with version 2.4.1 the installation procedure is slightly
+changed. Now you have not have to make the spawk directory yourself,
+but the tarball contains the spawk directory as well.
+
+-------------------------------------------------------------------------
+
 New version 2.4.0 announced                           Aug 16, 2009, 22:08
 ===========================
 
