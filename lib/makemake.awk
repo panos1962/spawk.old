@@ -13,6 +13,7 @@ BEGIN {
 	if (errs)
 		exit(1)
 
+	getline big3 <vfile
 	close(vfile)
 	OFS = " "
 	print "AWK_INCLUDE =", awkincl
@@ -30,7 +31,7 @@ BEGIN {
 		print "LIB_r =", lib_r
 
 	print "OBJ = spawk.o"
-	print "BU_LIST = README INSTALL configure tools/*.sh " \
+	print "BU_LIST = README INSTALL NEWS configure tools/*.sh " \
 		"src.stable/*.c src/*.c lib/* bin/* Test/* Sample/*"
 
 	print ""
@@ -67,10 +68,14 @@ BEGIN {
 	print "\t@sh tools/checkincl.sh $(AWK_INCLUDE) awk.h"
 	print "\t@sh tools/checkincl.sh $(SQL_INCLUDE) mysql.h"
 	print "\t@echo \"Compiling \\`spawk.c'...\""
-	print "\t@gcc -shared -g -c -O -I$(AWK_INCLUDE) " \
+	printf "\t@gcc -shared -g -c -O -I$(AWK_INCLUDE) " \
 		"-I$(SQL_INCLUDE) -D_SPAWK_DEBUG " \
 		"-DHAVE_CONFIG_H -DSPAWK_VERSION=\"\\\"" \
-		version "\\\"\" spawk.c"
+		version
+	if (big3)
+		printf " (" big3 ")"
+
+ 	print "\\\"\" spawk.c"
 	print "\t@strip --strip-unneeded $(OBJ)"
 
 	print ""
