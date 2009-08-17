@@ -1,17 +1,151 @@
 SPAWK Installation Instructions
-===============================
+*******************************
 
-SPAWK is owned by Panos I. Papadopoulos and is an open source
-GPL licenced software product.
+SPAWK is copyrighted (C) by Panos I. Papadopoulos and is an
+open source GPL licenced software product.
 
-Linux/UNIX Installation Procedure
----------------------------------
+Linux/UNIX Platforms
+====================
+To install SPAWK in Linux/UNIX platforms you can follow one of
+the following two methods:
+
+Binary Install	You can install the binary library `libspawk.so',
+		or `libspawk_r.so', or both in a valid shared
+		library directory in your local system, e.g.
+		/usr/lib. If you use SELinux, or any other
+		advanced security package, you may have to
+		take some action to make SPAWK module fully
+		functional.
+
+Source Install	That is the recommended installation method. You
+		download the current SPAWK version's tarball and
+		follow the instructions below.
+
+Source Installation Procedure
++++++++++++++++++++++++++++++
 To install SPAWK from the source you have to follow the
 following steps:
 
+Download SPAWK tarball
+----------------------
+Enter http://code.google.com/p/spawk/Downloads and donwload
+the SPAWK tarball. You may find several such tarballs.  It's
+always safe to download the most recent version. There may be
+some version qualifier (Alpha, Beta, or RC) in the version
+name, but the version is guaranteed to work for previously
+released features.
+
+Extract SPAWK source files and directories
+------------------------------------------
+After downloading the SPAWK tarball, you have to extract the
+source files and directories included in that tarball file.
+Move yourself in a non-system directory (/root or /usr/tmp are
+good candidates) and r un tar to extratct the contents of the
+tarball:
+
+	cd /usr/tmp
+	tar xzf /tmp/spawk-2.4.1.tar.gz
+
+You could, of course, had extract the files while downloading
+the tarball using such utilities offered by your browser.
+
+Configure the release
+---------------------
+After extracting the tarball contents, you'll not the tarball
+file any more, so you can remove the tarball file.
+Move yourself to the release just extracted source directory
+and run configure:
+
+	cd /usr/tmp/spawk-2.4.1
+	sh ./configure
+
+The `configure' shell script runs some checks on your system
+in order to construct the `Makefile' needed to proceed. These
+checks have to do with the existence of the gawk sources and
+MySQL needed header files and libraries. If the files are not
+found in your system, then you have to install them.
+
+Awk source installation
+-----------------------
+In order to construct the `awk.h' header file, you must have to
+download the gawk source tarball. In order to do that you can
+enter the http://ftp.gnu.org/gnu/gawk/ URL and download the
+gawk source tarball of your local system's gawk version. To
+check your local system's gawk version, run:
+
+	awk --version
+
+You can also use `wget' to download the gawk sourcetarball, e.g.
+
+	wget --quiet http://ftp.gnu.org/gnu/gawk/gawk-3.1.7.tar.gz
+
+After donwloading the gawk source tarball, extract the gawk source
+files and directories, move yourself into the source directory
+and run the `configure' shell script:
+
+	cd /usr/tmp
+	tar xzf gawk-3.1.7.tar.gz
+	cd gawk-3.1.7
 	sh configure
+
+Ignore all the messages and just check for the existence of `awk.h'
+header file. If found, then proceed. If you don't find the `awk.h'
+file, then you must ask someone to help you in that installation!
+
+MySQL downloads
+---------------
+If the `mysql.h' header is not installed in your local system, then
+you have to install the development package of MySQL. Follow the
+instruction of you local Linux/UNIX distro, e.g to install the
+package in CentOS:
+
+	yum install mysql-devel
+
+If the client libraries are also missing, then you must download them
+too. To download the libraries in CentOS:
+
+	yum install mysql-libs
+
+Now you must have installed the `mysql.h' header file and the
+libraries `libmysqlclient.so' and `libmysqlclient_r.so'. If the
+files are not installed in your system, then ask for help. Else,
+you may proceed.
+
+Reconfigure the SPAWK release
+-----------------------------
+After having installed the awk and MySQL needed files, then you
+can run the `configure' shell script once again:
+
+	sh ./configure
+
+Now you mustn't see any error messages about missing files, so
+you can proceed to SPAWK installation.
+
+Compiling and linking
+---------------------
+Now it's time to compile the sources and link the SPAWK libraries.
+
 	make
+	make test
+
+Installing SPAWK module
+-----------------------
+The default installation directory for the SPAWK module is /usr/lib.
+You can change that directory by editing the `Makefile' and changing
+the `PREFIX' variable set, e.g. PREFIX = /usr/local/lib. After setting
+the `PREFIX' variable, you can install the SPAWK module:
+
 	make install
+
+You may have to take some more action if you use SELinux or some other
+advanced security system. Please refer to your manuals about shared
+(or dynamic) libraries advanced security guidelines.
+
+Cleaning up
+-----------
+After installing the SPAWK module you'll no longer need the source
+files and directories. You can leave the source files and directories
+fo gawk and SPAWK, or you can remove them. It's up to you!
 
 For full detailed installation instructions, please read the
 "Installation Instructions" wiki in http://code.google.com/p/spawk.
