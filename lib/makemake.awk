@@ -33,7 +33,8 @@ BEGIN {
 
 	print "OBJ = spawk.o"
 	print "BU_LIST = README INSTALL NEWS configure tools/*.sh " \
-		"src.stable/*.c src/*.c lib/* bin/* Test/* Sample/*"
+		"src.stable/*.c src/*.c lib/* bin/* " \
+		"Test/* Sample/* Example/*"
 	print "TARBALL = spawk-" version ".tar.gz"
 
 	print ""
@@ -135,8 +136,7 @@ BEGIN {
 	print "\t@sh tools/backup.sh $(TARBALL)"
 
 	print ""
-	print "commit: $(TARBALL)"
-	print "\t@sh tools/commit.sh $(TARBALL)"
+	print "tar: $(TARBALL)"
 
 	print ""
 	print "$(TARBALL): $(BU_LIST)"
@@ -145,7 +145,7 @@ BEGIN {
 	print "\t@rm -rf spawk-" version "; mkdir spawk-" version
 	print "\t@(cd spawk-" version "; tar xf ../spawk.tar)"
 	print "\t@tar -czvf $(TARBALL) spawk-" version " >spawk.lst"
-	print "\t@rm -rf spawk-" version
+	print "\t@rm -rf spawk.tar spawk-" version
 
 	print ""
 	print "spawk.c: src.stable/*.c src/*.c"
