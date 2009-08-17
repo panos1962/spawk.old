@@ -6,4 +6,4 @@ echo "Mailing tar backup to ${BU_EMAIL}..."
 {
 	echo "SPAWK Backup"
 	date
-} | mutt -s "SPAWK Commit" -a spawk"${1}".tar "${BU_EMAIL}"
+} | mutt -s "SPAWK Commit" -a ${1} "${BU_EMAIL}"

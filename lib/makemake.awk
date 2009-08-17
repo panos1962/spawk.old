@@ -15,6 +15,7 @@ BEGIN {
 
 	getline big3 <vfile
 	close(vfile)
+	verfull = (big3 ? version " (" big3 ")" : version)
 	OFS = " "
 	print "AWK_INCLUDE =", awkincl
 	print "SQL_INCLUDE =", sqlincl
@@ -33,6 +34,7 @@ BEGIN {
 	print "OBJ = spawk.o"
 	print "BU_LIST = README INSTALL NEWS configure tools/*.sh " \
 		"src.stable/*.c src/*.c lib/* bin/* Test/* Sample/*"
+	print "TARBALL = spawk-" version ".tar.gz"
 
 	print ""
 	print ".SUFFIXES:"
@@ -109,7 +111,7 @@ BEGIN {
 
 	print ""
 	print "cleanup:"
-	printf "\t@rm -f backup spawk.* spawk*.tar"
+	printf "\t@rm -f backup spawk.* $(TARBALL)"
 	if (lib)
 		printf " $(LIB)"
 
@@ -129,22 +131,21 @@ BEGIN {
 
 	print ""
 	print ""
-	print "backup: spawk" version ".tar"
-	print "\t@sh tools/backup.sh " version
+	print "backup: $(TARBALL)"
+	print "\t@sh tools/backup.sh $(TARBALL)"
 
 	print ""
-	print "commit: spawk" version ".tar"
-	print "\t@sh tools/commit.sh " version
+	print "commit: $(TARBALL)"
+	print "\t@sh tools/commit.sh $(TARBALL)"
 
 	print ""
-	print "spawk" version ".tar: $(BU_LIST)"
+	print "$(TARBALL): $(BU_LIST)"
 	print "\t@make all"
-	print "\t@tar -cf spawk" version ".tar $(BU_LIST) >/dev/null"
-	print "\t@rm -rf spawk" version "; mkdir spawk" version
-	print "\t@(cd spawk" version "; tar xf ../spawk" version ".tar)"
-	print "\t@tar -czvf spawk" version ".tar spawk" \
-		version " >spawk.lst"
-	print "\t@rm -rf spawk" version
+	print "\t@tar -cf spawk.tar $(BU_LIST) >/dev/null"
+	print "\t@rm -rf spawk-" version "; mkdir spawk-" version
+	print "\t@(cd spawk-" version "; tar xf ../spawk.tar)"
+	print "\t@tar -czvf $(TARBALL) spawk-" version " >spawk.lst"
+	print "\t@rm -rf spawk-" version
 
 	print ""
 	print "spawk.c: src.stable/*.c src/*.c"
