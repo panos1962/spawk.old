@@ -1,0 +1,117 @@
+DROP DATABASE IF EXISTS chess;
+CREATE DATABASE chess;
+USE chess;
+
+CREATE TABLE player (
+	pl_key		NUMERIC(9) NOT NULL,
+	PRIMARY KEY pl_key USING HASH (
+		pl_key
+	),
+	pl_name		CHARACTER(40) NOT NULL,
+	pl_bdate	DATE NOT NULL,
+	UNIQUE INDEX pl_name USING BTREE (
+		pl_name,
+		pl_bdate
+	)
+)
+ENGINE = "InnoDB";
+
+CREATE TABLE tournament (
+	tr_key		NUMERIC(9) NOT NULL,
+	PRIMARY KEY tr_key USING HASH (
+		tr_key
+	),
+	tr_desc		CHARACTER(128) NOT NULL,
+	UNIQUE INDEX tr_desc USING BTREE (
+		tr_desc
+	),
+	tr_begin	DATE,
+	INDEX tr_begin USING BTREE (
+		tr_begin
+	),
+	tr_end		DATE,
+--	Column "tr_other" references another tournament which
+--	is the ancestor of that one. Because of null values
+--	involved in most of the rows (not every tournament has
+--	an ancestor tournament), the index constraint is not
+--	a foreign key, but a btree index is used.
+	tr_other	NUMERIC(9),
+	INDEX USING BTREE (
+		tr_other
+	)
+)
+ENGINE = "InnoDB";
+
+CREATE TABLE game (
+	gm_key		NUMERIC(9) NOT NULL,
+	PRIMARY KEY gm_key USING HASH (
+		gm_key
+	),
+	gm_tournament	NUMERIC(9),
+	FOREIGN KEY gm_tournament (
+		gm_tournament
+	) REFERENCES tournament (
+		tr_key
+	),
+	gm_kind ENUM (
+		'normal',
+		'blitz',
+		'rapid'
+	) NOT NULL,
+	gm_minutes NUMERIC(4),
+	gm_white NUMERIC(9) NOT NULL,
+	FOREIGN KEY gm_white (
+		gm_white
+	) REFERENCES player (
+		pl_key
+	),
+	gm_welo		NUMERIC(5) NOT NULL,
+	gm_black NUMERIC(9) NOT NULL,
+	FOREIGN KEY gm_black (
+		gm_black
+	) REFERENCES player (
+		pl_key
+	),
+	gm_belo		NUMERIC(5) NOT NULL,
+	gm_begin	DATETIME NOT NULL,
+	gm_end		DATETIME,
+	gm_wpoints	NUMERIC(2) NOT NULL,
+	gm_bpoints	NUMERIC(2) NOT NULL,
+	gm_stop		ENUM (
+		'Resign',
+		'Mate',
+		'Pat',
+		'Mate'
+	) NOT NULL
+)
+ENGINE = "InnoDB";
+
+CREATE TABLE movement (
+	mv_game		NUMERIC(9) NOT NULL,
+	mv_movement	NUMERIC(4) NOT NULL,
+	UNIQUE INDEX mv_key USING BTREE (
+		mv_game,
+		mv_movement
+	),
+	mv_piece	ENUM (
+		'P',
+		'N',
+		'F',
+		'R',
+		'Q',
+		'K',
+		'OO',
+		'OOO'
+	) NOT NULL,
+	mv_from		CHARACTER(2),
+	mv_to		CHARACTER(2),
+	mv_raise	ENUM (
+		'P',
+		'N',
+		'F',
+		'R',
+		'Q'
+	) NOT NULL,
+	mv_image	CHARACTER(128)
+)
+ENGINE = "InnoDB";

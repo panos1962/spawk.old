@@ -123,7 +123,7 @@ BEGIN {
 	print ""
 	print "cleanall:"
 	print "\t@make cleanup"
-	printf "\t@rm -f"
+	printf "\t@rm -f Makefile"
 	if (lib)
 		printf " $(PREFIX)$(LIB)"
 
@@ -140,10 +140,10 @@ BEGIN {
 
 	print ""
 	print "$(TARBALL): $(BU_LIST)"
-	print "\t@make all"
 	print "\t@tar -cf spawk.tar $(BU_LIST) >/dev/null"
 	print "\t@rm -rf spawk-" version "; mkdir spawk-" version
 	print "\t@(cd spawk-" version "; tar xf ../spawk.tar)"
+	print "\t@echo Creating $(TARBALL)"
 	print "\t@tar -czvf $(TARBALL) spawk-" version " >spawk.lst"
 	print "\t@rm -rf spawk.tar spawk-" version
 
