@@ -1,6 +1,31 @@
-DROP DATABASE IF EXISTS chess;
+# Database "chess" is about archiving of all chess games.
+# Games are organized in tournaments where each tournament
+# may belong to a more general schedule. Basic tables are
+# "player" where each player has a row, "tounament" where
+# there is a correspondig row for each tournament, and
+# "game" where each palyed game has a corresponding row.
+# Another very important table has to do with the movements
+# played in each game. That table is named "movement" and
+# contains all the movements of all the games played ever.
+
 CREATE DATABASE chess;
 USE chess;
+
+# Table "player" holds a single row (record) for each player
+# ever played an official game. There exists a lot more amount
+# of information to store for each player (nationality etc),
+# but it's out of the scope of that example.
+#
+# "Player" Columns
+# ----------------
+# All of the "player"'s columns names start with "pl_".
+#
+# The "pl_key" is a numeric key for the player to be used in
+# other tables referring "player" rows.
+#
+# The "pl_name" column holds the player's name and among with
+# the "pl_bdate" column constitute a unique key.
+
 
 CREATE TABLE player (
 	pl_key		NUMERIC(9) NOT NULL,
@@ -16,6 +41,30 @@ CREATE TABLE player (
 )
 ENGINE = "InnoDB";
 
+# Each game will be intergrated in a "tournament". So "tournament"
+# table holds related sets of games. Tournaments may belong to
+# other (larger) tournaments.
+#
+# "Tournament" Columns
+# --------------------
+# All of the "tournament"'s columns names start with "tr_".
+#
+# The "tr_key" is a numeric primary key for the tournament to be
+# references from aother tables.
+#
+# The "tr_desc" is a description of the tournament.
+#
+# The "tr_begin" column holds the date when the tournament begins,
+# while the "tr_end" column holds the end date of the tournament.
+# Each of those two columns may hold null values in order to
+# consider as tournaments various sets of games, e.g. "named" games,
+# etc.
+#
+# The "tr_other" column is filled in tournaments that belong to
+# other (larger) tournaments. In those cases the ancestor's
+# key is filled in. When there is no ancestor tournament, then
+# that column's value must be set to null.
+
 CREATE TABLE tournament (
 	tr_key		NUMERIC(9) NOT NULL,
 	PRIMARY KEY tr_key USING HASH (
@@ -30,17 +79,55 @@ CREATE TABLE tournament (
 		tr_begin
 	),
 	tr_end		DATE,
---	Column "tr_other" references another tournament which
---	is the ancestor of that one. Because of null values
---	involved in most of the rows (not every tournament has
---	an ancestor tournament), the index constraint is not
---	a foreign key, but a btree index is used.
+#	Column "tr_other" references another tournament which
+#	is the ancestor of that one. Because of null values
+#	involved in most of the rows (not every tournament has
+#	an ancestor tournament), the index constraint is not
+#	a foreign key, but a btree index is used.
 	tr_other	NUMERIC(9),
 	INDEX USING BTREE (
 		tr_other
 	)
 )
 ENGINE = "InnoDB";
+
+# Table "game" holds a row for each played game. There always
+# two players involved in a game, and usually a game belongs
+# to a tournament.
+#
+# "Game" Columns
+# --------------------
+# All of the "game"'s columns names start with "gm_".
+#
+# The "gm_key" is a numeric primary key to identify the game.
+# That key is referenced mainly from the "movement" rows to
+# add movements in a game.
+#
+# The "gm_tournament" column is the tournamnt's key of the
+# tournament to which that game belongs. If the game doesn't
+# belong to any tournament, then that column may be null valued.
+#
+# The "gm_kind" column shows the kind of the game. Among with the
+# "gm_minutes" column shows the type of the game, e.g. "30 Minutes
+# Rapid", or "5 Minutes Blitz" etc.
+#
+# The "gm_white" and "gm_black" columns shows the white and black
+# players involved in the game. "gm_welo" and "gm_belo" columns
+# are the ELO values for white and black players just before that
+# game.
+#
+# The "gm_begin" is the date/time of the beging of that game.
+# While "gm_end" date/time column is null, the game is still in
+# action. When the game ends, then the end date/time will be filled
+# in the "gm_end" column.
+#
+# The "gm_wpoints" and "gm_bpoints" columns hold the points added
+# to the white and black players respectively, e.g. if the white
+# won the game, then 10 points go to the white player and 0 to the
+# black player, if the game is equal, then 5 points go to each
+# player etc.
+#
+# The "gm_stop" column shows how the game ended (Mate, Pat, etc).
 
 CREATE TABLE game (
 	gm_key		NUMERIC(9) NOT NULL,
@@ -74,17 +161,58 @@ CREATE TABLE game (
 	),
 	gm_belo		NUMERIC(5) NOT NULL,
 	gm_begin	DATETIME NOT NULL,
+	# While the game is not yet finished, the ending date/time
+	# is null. The same is true for the points and the way of
+	# the game ended. All of these columns, though, will be
+	# null allowed.
 	gm_end		DATETIME,
-	gm_wpoints	NUMERIC(2) NOT NULL,
-	gm_bpoints	NUMERIC(2) NOT NULL,
+	gm_wpoints	NUMERIC(2),
+	gm_bpoints	NUMERIC(2),
 	gm_stop		ENUM (
 		'Resign',
 		'Mate',
-		'Pat',
-		'Mate'
-	) NOT NULL
+		'Pat'
+	)
 )
 ENGINE = "InnoDB";
+
+# Table "movement" is huge, conatining all the movements of all
+# the official games played ever. Each movement belongs, of course,
+# to a specific game.
+#
+# "Movement" Columns
+# ------------------
+# All of the "movement"'s columns names start with "mv_".
+#
+# The "mv_game" column references the game's primary key.
+# There is no foreign key constraint for economy reasons,
+# beacause that column is involved in a btree key among
+# with the "mv_movement" column which shows the rank of the
+# movement, e.g. 1st, 2nd, etc.
+#
+# The "mv_piece" column show the piece moved.
+#
+# The "mv_from" column shows the square from which the piece
+# has been moved, while the "mv_to" column shows the square
+# to which the piece arrived. The square notation is in the
+# classical style of "a1", "h7", etc.
+#
+# The "mv_raise" column holds the piece to raise a pawn arrived
+# to the last row. For most of the movements that column is
+# null valued (no raise).
+#
+# The "mv_board" columns is a very important column that holds
+# the board's image after that movement. There are 128 characters
+# in that column, grouped in cuples where each cuple is in the
+# form "[WB_][PNBRQK_]" where "[WB_]" stands for the color of the
+# piece standing in a specific board square (W: White, B: Black,
+# _: empty), and "[PNBRQK]" statnds for the piece kind in that
+# specific square (P: Pawn, N: Knight, B: Bishop, R: Rook,
+# Q: Queen, K: King, _: empty). The squares are ranked as 1 for
+# a1, 2 for b2, 3 for c3,... 9 for a2, 10 for b2,... 63 for g8
+# and 64 for h8. That is a "mv_board" value after the first
+# (white's) movement of N from b1 to c3 is something like:
+# "WR__WBWQWKWBWNWRWPWPWPWPWPWPWPWP____WN____..." 
 
 CREATE TABLE movement (
 	mv_game		NUMERIC(9) NOT NULL,
@@ -96,7 +224,7 @@ CREATE TABLE movement (
 	mv_piece	ENUM (
 		'P',
 		'N',
-		'F',
+		'B',
 		'R',
 		'Q',
 		'K',
@@ -108,10 +236,13 @@ CREATE TABLE movement (
 	mv_raise	ENUM (
 		'P',
 		'N',
-		'F',
+		'B',
 		'R',
 		'Q'
-	) NOT NULL,
-	mv_image	CHARACTER(128)
+	),
+	mv_board	CHARACTER(128),
+	INDEX mv_board USING BTREE (
+		mv_board
+	)
 )
 ENGINE = "InnoDB";
