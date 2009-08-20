@@ -112,7 +112,7 @@ BEGIN {
 
 	print ""
 	print "cleanup:"
-	printf "\t@rm -f backup spawk.* $(TARBALL)"
+	printf "\t@rm -f backup spawk.* $(TARBALL) chess.tar.gz"
 	if (lib)
 		printf " $(LIB)"
 
@@ -154,8 +154,7 @@ BEGIN {
 
 	print ""
 	print "chess:"
-	print "\t@(cd Example/; rm -f chess/chess.tar.gz; " \
-		"tar czf chess/chess.tar.gz chess)"
+	print "\t@(cd Example/; tar czf ../chess.tar.gz chess)"
 
 	print ""
 	print "man:"
