@@ -36,6 +36,7 @@ BEGIN {
 		"src.stable/*.c src/*.c lib/* bin/* " \
 		"Test/* Sample/* Example/*"
 	print "TARBALL = spawk-" version ".tar.gz"
+	print "CHESSTAR = chess.tar.gz"
 
 	print ""
 	print ".SUFFIXES:"
@@ -112,7 +113,7 @@ BEGIN {
 
 	print ""
 	print "cleanup:"
-	printf "\t@rm -f backup spawk.* $(TARBALL) chess.tar.gz"
+	printf "\t@rm -f backup spawk.* $(TARBALL) $(CHESSTAR)"
 	if (lib)
 		printf " $(LIB)"
 
@@ -153,8 +154,11 @@ BEGIN {
 	print "\t@sh tools/makeprn.sh >spawk.txt"
 
 	print ""
-	print "chess:"
-	print "\t@(cd Example/; tar czf ../chess.tar.gz chess)"
+	print "chess: $(CHESSTAR)"
+
+	print ""
+	print "$(CHESSTAR):"
+	print "\t@(cd Example/; tar czf ../$(CHESSTAR) chess/*)"
 
 	print ""
 	print "man:"
