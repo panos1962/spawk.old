@@ -153,6 +153,11 @@ BEGIN {
 	print "\t@sh tools/makeprn.sh >spawk.txt"
 
 	print ""
+	print "chess:"
+	print "\t@(cd Example/; rm -f chess/chess.tar.gz; " \
+		"tar czf chess/chess.tar.gz chess)"
+
+	print ""
 	print "man:"
 	print "\t@groff -T ascii -man -rLL=6.5i -rLT=7.7i " \
 		"lib/spawk.man | less -is"
