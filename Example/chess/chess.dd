@@ -1,7 +1,7 @@
 # Database "chess" is about archiving of all chess games.
 # Games are organized in tournaments where each tournament
 # may belong to a more general schedule. Basic tables are
-# "player" where each player has a row, "tounament" where
+# "player" where each player has a row, "tournament" where
 # there is a correspondig row for each tournament, and
 # "game" where each palyed game has a corresponding row.
 # Another very important table has to do with the movements
