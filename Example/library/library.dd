@@ -1,0 +1,136 @@
+# Database "library" describes a books, readers and books'
+# circulation. There are two major components that constitute
+# the database: books and circulation. Books component consists
+# of writers, books, authors, subjects and copies. Circulation
+# component consists of readers and boroughs.
+
+DROP DATABASE IF EXISTS `library`;
+CREATE DATABASE `library`;
+USE `library`;
+
+CREATE TABLE `writer` (
+	`wr_key`	NUMERIC(9) NOT NULL,
+	PRIMARY KEY `wr_key` USING HASH (
+		`wr_key`
+	),
+	`wr_name`	VARCHAR(60) NOT NULL,
+	UNIQUE INDEX `wr_name` USING BTREE (
+		`wr_name`
+	)
+)
+ENGINE = "InnoDB";
+
+CREATE TABLE `book` (
+	`bo_key`	NUMERIC(9) NOT NULL,
+	PRIMARY KEY `bo_key` USING HASH (
+		`bo_key`
+	),
+	`bo_title`	VARCHAR(256) NOT NULL,
+	UNIQUE INDEX `bo_title` USING BTREE (
+		`bo_title`
+	)
+)
+ENGINE = "InnoDB";
+
+# Every book may have many authors. Those authors
+# records refer the writer and the book to which
+# the writer contributes.
+
+CREATE TABLE `author` (
+	`au_book`	NUMERIC(9) NOT NULL,
+	FOREIGN KEY `au_book` (
+		`au_book`
+	) REFERENCES `book` (
+		`bo_key`
+	),
+	`au_writer` NUMERIC(9) NOT NULL,
+	FOREIGN KEY `au_writer` (
+		`au_writer`
+	) REFERENCES `writer` (
+		`wr_key`
+	)
+)
+ENGINE = "InnoDB";
+
+# Each book have some related subjects. Those
+# subjects are just strings related with each
+# specific book.
+
+CREATE TABLE `subject` (
+	`su_book`	NUMERIC(9) NOT NULL,
+	FOREIGN KEY `su_book` (
+		`su_book`
+	) REFERENCES `book` (
+		`bo_key`
+	),
+	`su_subject`	VARCHAR(256) NOT NULL,
+	INDEX `su_subject` USING BTREE (
+		`su_subject`
+	)
+)
+ENGINE = "InnoDB";
+
+# Every book has many copies in various locations.
+# Each copy has each own key (plain number) and
+# refers to the related book.
+
+CREATE TABLE `copy` (
+	`co_key`	NUMERIC(9) NOT NULL,
+	PRIMARY KEY `co_key` USING HASH (
+		`co_key`
+	),
+	`co_book`	NUMERIC(9) NOT NULL,
+	FOREIGN KEY `co_book` (
+		`co_book`
+	) REFERENCES `book` (
+		`bo_key`
+	),
+	`co_location`	VARCHAR(128) NOT NULL,
+	INDEX `co_location` USING BTREE (
+		`co_location`
+	)
+)
+ENGINE = "InnoDB";
+
+CREATE TABLE `reader` (
+	`rd_key`	NUMERIC(9) NOT NULL,
+	PRIMARY KEY `rd_key` USING HASH (
+		`rd_key`
+	),
+	`rd_name`	VARCHAR(60) NOT NULL,
+	UNIQUE INDEX `rd_name` USING BTREE (
+		`rd_name`
+	)
+)
+ENGINE = "InnoDB";
+
+CREATE TABLE `borough` (
+	`br_reader`	NUMERIC(9) NOT NULL,
+	FOREIGN KEY `br_reader` (
+		`br_reader`
+	) REFERENCES `reader` (
+		`rd_key`
+	),
+	`br_copy`	NUMERIC(9) NOT NULL,
+	FOREIGN KEY `br_copy` (
+		`br_copy`
+	) REFERENCES `copy` (
+		`co_key`
+	),
+
+	# The "br_date" column is the date of borough.
+	# The "br_until" date is the date for the copy
+	# to be returned. The "br_return" columns is
+	# the actual return date. That means that if
+	# the "br_return" is null and the "br_until"
+	# date is greater than the current date, the
+	# reader must be informed.
+
+	`br_date`	DATE NOT NULL,
+	`br_until`	DATE,
+	INDEX `br_until` USING BTREE (
+		`br_until`
+	),
+	`br_return`	DATE
+)
+ENGINE = "InnoDB";
