@@ -4,7 +4,6 @@
 # of writers, books, authors, subjects and copies. Circulation
 # component consists of readers and boroughs.
 
-DROP DATABASE IF EXISTS `library`;
 CREATE DATABASE `library`;
 USE `library`;
 
@@ -131,6 +130,9 @@ CREATE TABLE `borough` (
 	INDEX `br_until` USING BTREE (
 		`br_until`
 	),
-	`br_return`	DATE
+	`br_return`	DATE,
+	INDEX `br_return` USING BTREE (
+		`br_return`
+	)
 )
 ENGINE = "InnoDB";
