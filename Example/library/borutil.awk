@@ -71,33 +71,12 @@ function borough(			data) {
 # array and prints the reader's name, the book's title and the
 # date that the book must have been returned to the library.
 
-function print_borough(borough) {
+function print_borough(borough, data) {
 	print "Reader: " reader(borough[1])
-	print "Book..: " title(borough[2])
+	get_copy_data(borough[2], data, 1)
+	print "Book..: " data["title"]
 	print "Date..: " borough[3] " - " borough[4]
 	print ""
-}
-
-# Function "reader" is a utility function that accepts a reader's
-# primary key ("rd_key") and returns the reader's name ("rd_name").
-
-function reader(rk,				data) {
-	spawk_select("SELECT `rd_name` FROM `reader` " \
-		"WHERE `rd_key` = " rk)
-	spawk_first(data)
-	return(data[1])
-}
-
-# Function "title" is a utility function that accepts a book copy's
-# primary key ("co_key") and returns the related book's title
-# ("bo_title").
-
-function title(ck,				data) {
-	spawk_select("SELECT `bo_title` FROM `book` " \
-		"WHERE `bo_key` = (SELECT `co_book` FROM `copy` " \
-		"WHERE `co_key` = " ck ")")
-	spawk_first(data)
-	return(data[1])
 }
 
 # Function "set_date" is a initialization function to check/set
