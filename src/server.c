@@ -294,7 +294,7 @@ SERVER_EXISTS:
 	if (data_index[cur_server] != NULL) {
 		err++;
 		warning("push_server: server %d found with "
-			"not null data index pointer");
+			"not null data index pointer", n_server);
 		(void)set_data_index(NULL, 0);
 	}
 
