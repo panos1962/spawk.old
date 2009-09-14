@@ -96,6 +96,9 @@ BEGIN {
 		print "$(PREFIX)$(LIB): $(OBJ)"
 		print "\t@mv $(LIB) $(PREFIX)$(LIB)"
 		print "\t@sh tools/makelib.sh $(PREFIX)$(LIB)"
+		print "\t@chown root $(PREFIX)$(LIB)"
+		print "\t@chgrp root $(PREFIX)$(LIB)"
+		print "\t@chmod 644 $(PREFIX)$(LIB)"
 	}
 
 	if (lib_r) {
@@ -103,6 +106,9 @@ BEGIN {
 		print "$(PREFIX)$(LIB_r): $(OBJ)"
 		print "\t@mv $(LIB_r) $(PREFIX)$(LIB_r)"
 		print "\t@sh tools/makelib.sh $(PREFIX)$(LIB_r)"
+		print "\t@chown root $(PREFIX)$(LIB_r)"
+		print "\t@chgrp root $(PREFIX)$(LIB_r)"
+		print "\t@chmod 644 $(PREFIX)$(LIB_r)"
 	}
 
 	print ""
