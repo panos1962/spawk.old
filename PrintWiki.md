@@ -1,0 +1,3 @@
+# Printing Wikis #
+
+If you've ever tried to print wiki pages, then you may didn't like the printout. There is no Print button on the wiki pages, so try this: edit the wiki URL adding "?show=content,meta" at the end, e.g. if the wiki page to print is http://code.google.com/p/spawk/wiki/GeneralOverview, then try: http://code.google.com/p/spawk/wiki/GeneralOverview?show=content,meta. If the wiki page is ok to print now, then try Control+P, or something else to print the wiki.
